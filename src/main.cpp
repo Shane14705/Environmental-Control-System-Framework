@@ -1,7 +1,14 @@
-#include <Arduino.h>
+#include <utils.h>
+
+#define NUMINPUTS 2
+
+
 
 void setup() {
-  // put your setup code here, to run once:
+  //setup our input pins
+  int INPUTPINS[NUMINPUTS] = {34, 35};
+  setupInputs(INPUTPINS, NUMINPUTS);
+  
 }
 
 void loop() {

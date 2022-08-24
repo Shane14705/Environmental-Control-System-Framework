@@ -1,6 +1,14 @@
 #include <Arduino.h>
 
+typedef struct DHTREADING {
+    DHTREADING(float tempIN, float humidityIN) : temp(tempIN), humidity(humidityIN) {};
+    float temp;
+    float humidity;
+} DHTREADING;
+
+
 void setupInputs(int pins[], int numPins);
+void setupOutputs(int pins[], int numPins);
 
 // template<typename SENSOR_T>
 // struct Sensor {

@@ -13,6 +13,7 @@
 
 
 QueueHandle_t SENSOR_QUEUE;
+TimerHandle_t TIMER_HANDLES[NUMINPUTS];
 
 //When created, the "Timer ID" should be a pointer to the timer's DHT sensor object
 
@@ -23,17 +24,23 @@ void vDHTTimerCallback(TimerHandle_t xTimer) {
   //update the queue with the latest reading
   xQueueOverwrite(
     SENSOR_QUEUE,
-    &DHTREADING(sensor->readTemperature(),
+    &DHT_READING(sensor->readTemperature(),
   sensor->readHumidity())
   );
 
 }
 
+//control task is higher priority than display task, it will block to peek at notification queue. once it has peeked itll run, then pass it down to display task
+//which will unblock and remove it from queue, and update all of the representations
 void vCONTROLTASK() {
+  for (;;)
 
-};
+}
 
+//Depending on what work is required to keep display up, we might consider making a queue for all changes which would require the display to update
+//then we could simply have the display function block on that queue so it only runs when a change is required
 void vDISPLAYTASK() {
+  //Needs to update display as well as any remote representations (i.e: server)
   for (;;) {
     
     xQueuePeek(SENSOR_QUEUE)
@@ -50,18 +57,18 @@ void setup() {
   int INPUTPINS[NUMINPUTS] = {34, 35};
   setupInputs(INPUTPINS, NUMINPUTS);
 
-  
+  SENSOR_QUEUE = xQueueCreate(1, sizeof(DHT_READING));
 
   for (int i = 0; i < NUMINPUTS; i++) {
     //delete ptr is just the same as ptr->~Type();
     //very different call from ~ptr();
     std::unique_ptr<DHT> currentsensor = std::unique_ptr<DHT>(new DHT(INPUTPINS[i], DHT22));
-    SENSOR_QUEUE = xQueueCreate(1, sizeof(DHTREADING));
+    
     currentsensor->begin();
 
     //as long as the copy constructor for DHT is written correctly, we should be fine 
     SENSOR_ARRAY.push_back(currentsensor);
-    xTimerCreate(
+    TIMER_HANDLES[i] = xTimerCreate(
       "DHT TIMER",
       (5000/portTICK_RATE_MS),
       pdTRUE,

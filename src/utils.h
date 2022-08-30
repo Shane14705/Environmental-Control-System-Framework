@@ -4,7 +4,7 @@ typedef struct DHTREADING {
     DHTREADING(float tempIN, float humidityIN) : temp(tempIN), humidity(humidityIN) {};
     float temp;
     float humidity;
-} DHTREADING;
+} DHT_READING;
 
 
 void setupInputs(int pins[], int numPins);

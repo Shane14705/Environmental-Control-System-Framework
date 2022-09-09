@@ -11,6 +11,7 @@
 #define NUMINPUTS 2
 #define NUMOUTPUTS 4
 
+//TODO: Eventually use a queue set to block on notifs and semaphores for different objects to allow user control of different peripherals
 
 QueueHandle_t SENSOR_QUEUE;
 TimerHandle_t TIMER_HANDLES[NUMINPUTS];
@@ -43,7 +44,7 @@ void vDISPLAYTASK() {
   //Needs to update display as well as any remote representations (i.e: server)
   for (;;) {
     
-    xQueuePeek(SENSOR_QUEUE)
+    xQueue(SENSOR_QUEUE)
   }
 }
 

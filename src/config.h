@@ -1,0 +1,5 @@
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define NUMINPUTS 4
+#define NUMOUTPUTS 4
+#define POTDISPDELAY 5000
